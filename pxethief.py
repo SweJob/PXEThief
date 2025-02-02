@@ -9,6 +9,11 @@
 # You should have received a copy of the GNU General Public License along with PXEThief. If not, see <https://www.gnu.org/licenses/>.
 
 from scapy.all import *
+# Adding 3 more specific scapy imports to avoid warningsin VS Code. Do not seem necessary to run the code, therefore left commented out.
+# from scapy.layers.inet import UDP, IP
+# from scapy.layers.dhcp import DHCP, BOOTP
+# from scapy.layers.l2 import Ether
+
 import binascii
 import string
 import ipaddress
@@ -152,7 +157,9 @@ def configure_scapy_networking(ip_address):
     global clientMacAddress
 
     clientIPAddress = get_if_addr(conf.iface)
-    fam,clientMacAddress = get_if_raw_hwaddr(conf.iface)
+    # Updated code as get_if_raw_hwaddr is not working on all distros, previous code commented out.
+    # fam,clientMacAddress = get_if_raw_hwaddr(conf.iface)
+    clientMacAddress = get_if_hwaddr(conf.iface)
 
     bind_layers(UDP,BOOTP,dport=4011,sport=68) # Make Scapy aware that, indeed, DHCP traffic *can* come from source or destination port udp/4011 - the additional port used by MECM
     bind_layers(UDP,BOOTP,dport=68,sport=4011)
